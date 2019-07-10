@@ -1,0 +1,13 @@
+{
+    "entry": "src/pages/*.js",
+    "extraBabelPlugins": [
+        ["import", { "libraryName": "antd", "style": true }]
+    ],
+     "proxy": {
+        "/api": {
+            "target": "http://192.168.2.219:9000",
+            "changeOrigin": true,
+            "pathRewrite": { "^/api" : "" }
+        }
+    }
+}
