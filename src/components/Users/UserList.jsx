@@ -52,7 +52,7 @@ const UserList = ({
         columns={columns}
         dataSource={dataSource}
         loading={loading}
-        rowKey={record => record.id}
+        rowKey={record => record.name}
         pagination={pagination}
       />
     </div>
