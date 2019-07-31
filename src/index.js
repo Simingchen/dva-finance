@@ -1,7 +1,6 @@
 import dva from "dva";
 import "./index.css";
 const router = require("./router")["default"]
-console.log(router)
 // 1. Initialize
 const app = dva();
 
