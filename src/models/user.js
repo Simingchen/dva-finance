@@ -1,5 +1,5 @@
 export default {
-  namespace: 'Users',
+  namespace: 'users',
 
   state: {
     list: [],
