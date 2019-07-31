@@ -1,7 +1,11 @@
 // ./src/routes/Users.jsx
 import React from 'react';
 
+// 引入 connect 工具函数
+import { connect } from 'dva';
+
 // Users 的 Presentational Component
+// 暂时都没实现
 import UserList from '../components/Users/UserList';
 import UserSearch from '../components/Users/UserSearch';
 import UserModal from '../components/Users/UserModal';
@@ -10,11 +14,21 @@ import UserModal from '../components/Users/UserModal';
 // 可以暂时新建一个空的
 import styles from '../css/Users.less';
 
-function Users () {
+function Users({ location, dispatch, users }) {
 
-  const userSearchProps = {};
-  const userListProps = {};
-  const userModalProps = {};
+  const {
+    loading, list, total, current,
+    currentItem, modalVisible, modalType
+    } = users;
+
+  const userSearchProps={};
+  const userListProps={
+		dataSource: list,
+		total,
+		loading,
+		current,
+	};
+  const userModalProps={};
 
   return (
     <div className={styles.normal}>
@@ -28,4 +42,10 @@ function Users () {
   );
 }
 
-export default Users;
+// 指定订阅数据，这里关联了 users
+function mapStateToProps({ users }) {
+  return {users};
+}
+
+// 建立数据关联关系
+export default connect(mapStateToProps)(users);
