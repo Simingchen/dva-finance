@@ -1,6 +1,8 @@
 import dva from "dva";
+import router from './router'
 import 'antd/dist/antd.css';
-const router = require("./router")["default"]
+import './css/index.css';
+
 // 1. Initialize
 const app = dva();
 
@@ -8,7 +10,7 @@ const app = dva();
 // app.use({});
 
 // 3. Model
-// app.model(require('./models/example').default);
+app.model(require('./models/User.js').default);
 
 // 4. Router
 app.router(router);

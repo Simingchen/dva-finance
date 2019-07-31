@@ -12,18 +12,18 @@ const UserList = ({
     dataSource,
 }) => {
   const columns = [{
-    title: '姓名',
-    dataIndex: 'name',
-    key: 'name',
+    title: '客户名称',
+    dataIndex: 'cust_name',
+    key: 'cust_name',
     render: (text) => <a href="/">{text}</a>,
   }, {
-    title: '年龄',
-    dataIndex: 'age',
-    key: 'age',
+    title: '所属门店',
+    dataIndex: 'belong_dept_name',
+    key: 'belong_dept_name',
   }, {
-    title: '住址',
-    dataIndex: 'address',
-    key: 'address',
+    title: '客户经理',
+    dataIndex: 'client_manager_name',
+    key: 'client_manager_name',
   }, {
     title: '操作',
     key: 'operation',
@@ -52,7 +52,7 @@ const UserList = ({
         columns={columns}
         dataSource={dataSource}
         loading={loading}
-        rowKey={record => record.name}
+        rowKey={record => record.agency_id}
         pagination={pagination}
       />
     </div>
