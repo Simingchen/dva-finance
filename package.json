@@ -1,4 +1,9 @@
 {
+  "name": "finance-app",
+  "version": "3.8.0",
+  "license": "MIT",
+  "description": "A dva project",
+  "author": "Siming",
   "private": true,
   "scripts": {
     "start": "roadhog server",
