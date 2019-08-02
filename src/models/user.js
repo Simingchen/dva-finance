@@ -36,10 +36,6 @@ export default {
       history.listen(location => {
         if (location.pathname === '/users') {
           dispatch({
-            type: 'querySuccess',
-            payload: {}
-          });
-          dispatch({
             type: 'query',
             payload: {}
           });
