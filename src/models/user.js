@@ -1,12 +1,12 @@
 // 简单理解 call 是调用执行一个函数而 put 则是相当于 dispatch 执行一个 action，而 select 则可以用来访问其它 model
 // 列表查询
-// export function apiCommodityList (par) {
-//   return req({
-//     url: 'admin/appManager/appPagedResult.do',
-//     method: 'POST',
-//     data: Object.assign({}, par)
-//   })
-// }
+// model 包含了五个属性，各个属性的含义如下：
+
+// namespace：命名空间，同时也是他在全局 state 上的属性名。
+// state：初始 state。
+// subscriptions：订阅数据源，然后根据需要 dispatch 相应的 action。
+// effects：用于处理异步操作和业务逻辑，不直接修改 state。可以指定 type，写法参考上文 takeLatest
+// reducers：同 redux 中的 redur 一样，用于处理同步操作，唯一可以修改 state 的地方。
 // 处理异步请求
 import request from '../utils/request';
 async function query(params) {
