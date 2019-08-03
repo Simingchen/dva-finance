@@ -61,6 +61,16 @@ export default {
     *create(){},
     *'delete'(){},
     *update(){},
+    // 示例
+    *fetch({payload}, {call, put, select, take}) {  // eslint-disable-line
+        yield take('auth/getMemberInfo/@@end');
+        const {info} = yield select(state => state.auth);
+        const {data, err} = yield call(service.get, info.id);
+        if(err){
+        } else {
+            yield put({type: 'save', payload: {...data}});
+        }
+    }
   },
   reducers: {
     showLoading(state, action){
@@ -75,5 +85,9 @@ export default {
     createSuccess(){},
     deleteSuccess(){},
     updateSuccess(){},
+    // 示例
+    save(state, action) {
+        return {...state, ...action.payload};
+    },
   }
 }
