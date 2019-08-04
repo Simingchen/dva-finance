@@ -41,7 +41,7 @@ export function apiLogin (uuid, encryptPwd, loginName) {
 }
 
 // 获取用户信息
-export function userDetail (token) {
+export function apiUserDetail (token) {
   return req({
     url: 'api/sso/authentication/userDetail.do?token=' + token,
     method: 'POST'

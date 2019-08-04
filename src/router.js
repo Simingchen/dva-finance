@@ -1,26 +1,25 @@
 // 动态添加路由
 import React from 'react';
-import { routerRedux, Route, Switch, Redirect } from 'dva/router';
+import { routerRedux, Route, Switch } from 'dva/router';
+import dynamic from 'dva/dynamic';
 import NProgress from 'nprogress' // Progress 进度条
 import 'nprogress/nprogress.css'// Progress 进度条样式
-import dynamic from 'dva/dynamic';
+import { getToken } from './utils/auth' // 验权
 const { ConnectedRouter } = routerRedux;
 
 function RouterConfig({ history, app }) {
-  console.log(app)
   // 路由监听
   NProgress.start()
   history.listen(location => {
-    const uid = sessionStorage.getItem('uid') || localStorage.getItem("uid")
-    console.log(location.pathname)
-    if (location.pathname === '/' || location.pathname === '/login') {
-      if (uid) {
-        app._store.dispatch(routerRedux.replace('/backstage'))
+    NProgress.start()
+    const token = getToken()
+    if (token) {
+      if (location.pathname === '/login') {
+        app._store.dispatch(routerRedux.push('/'))
+        NProgress.done()
       }
     } else {
-      if (!uid) {
-        app._store.dispatch(routerRedux.push('/'))
-      }
+      app._store.dispatch(routerRedux.push('/login'))
     }
     NProgress.done()
   })
@@ -32,11 +31,52 @@ function RouterConfig({ history, app }) {
     
   // >>>>>>>>>>>>>>>路由数组 START <<<<<<<<<<<<<<<
   let routes = [
-      {
-          path: '/login',
-          models: () => [import('./models/login.js')],
-          component: () => import('./views/login.jsx'),
-      }
+    {
+      path: '/',
+      models: () => [import('./models/user.js')],
+      component: () => import('./views/IndexPage.jsx'),
+      'children': [
+        {
+          'path': 'customerDetails',
+          'component': 'customerManagement/customerDetails',
+          'name': 'CustomerDetails',
+          'hidden': true,
+          'meta': { 'title': '客户详情', 'noCache': false }
+        }
+      ]
+    },
+    {
+      path: '/login',
+      models: () => [import('./models/login.js')],
+      component: () => import('./views/login.jsx'),
+      'children': [
+        {
+          'path': 'customerDetails',
+          'component': 'customerManagement/customerDetails',
+          'name': 'CustomerDetails',
+          'hidden': true,
+          'meta': { 'title': '客户详情', 'noCache': false }
+        }
+      ]
+    },
+    // { // 订单管理
+    //   'path': '/orderManagement',
+    //   'component': 'Layout',
+    //   'redirect': 'noredirect',
+    //   'hidden': false,
+    //   'alwaysShow': true,
+    //   'name': 'Orderanagement',
+    //   'meta': { 'title': '订单管理', 'icon': 'dingdan' },
+    //   'children': [
+    //     {
+    //       'path': 'orderList',
+    //       'component': 'orderManagement/orderList',
+    //       'name': 'OrderList',
+    //       'meta': { 'title': '订单列表', 'noCache': false }
+    //     }
+    //   ]
+    // }
+    
   ];
   // >>>>>>>>>>>>>>>路由数组 END <<<<<<<<<<<<<<<
 
@@ -44,7 +84,7 @@ function RouterConfig({ history, app }) {
   return (
     <ConnectedRouter history={history}>
       <Switch>
-        <Route path="/" exact render={() => (<Redirect to="/dashboard" />)} />
+        {/* <Route path="/" exact render={() => (<Redirect to="/dashboard" />)} /> */}
         {
           routes.map(({ path, name, ...dynamics }, index) => {
             return (
