@@ -1,6 +1,6 @@
 import React  from 'react';
 import { Form, Icon, Input, Button } from 'antd';
-import { routerRedux } from 'dva/router';
+// import { routerRedux } from 'dva/router';
 import { setToken } from '../utils/auth'
 import md5 from 'js-md5'
 import { apiLogin, genUUID } from '../services/login.js'
@@ -17,7 +17,6 @@ class HorizontalLoginForm extends React.Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    const that = this
     this.props.form.validateFields((err, values) => {
       if (!err) {
         genUUID().then(res => {

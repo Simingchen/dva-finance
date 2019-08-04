@@ -1,11 +1,15 @@
 // 动态添加路由
 import React from 'react';
 import { routerRedux, Route, Switch, Redirect } from 'dva/router';
+import NProgress from 'nprogress' // Progress 进度条
+import 'nprogress/nprogress.css'// Progress 进度条样式
 import dynamic from 'dva/dynamic';
 const { ConnectedRouter } = routerRedux;
 
 function RouterConfig({ history, app }) {
+  console.log(app)
   // 路由监听
+  NProgress.start()
   history.listen(location => {
     const uid = sessionStorage.getItem('uid') || localStorage.getItem("uid")
     console.log(location.pathname)
@@ -18,6 +22,7 @@ function RouterConfig({ history, app }) {
         app._store.dispatch(routerRedux.push('/'))
       }
     }
+    NProgress.done()
   })
 //   const error = dynamic({
 //     app,
