@@ -1,2 +1,9 @@
 {
+  "proxy": {
+      "/api": {
+          "target": "http://47.107.46.219:8083",
+          "changeOrigin": true,
+          "pathRewrite": { "^/api" : "" }
+      }
+  }
 }
