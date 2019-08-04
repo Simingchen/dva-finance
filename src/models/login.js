@@ -11,7 +11,7 @@
 import { apiLogin} from '../services/login.js';
 
 export default {
-  namespace: 'user',
+  namespace: 'login',
   state: {
     list: [],
     total: null,
@@ -20,19 +20,6 @@ export default {
     currentItem: {}, // 当前操作的用户对象
     modalVisible: false, // 弹出窗的显示状态
     modalType: 'create', // 弹出窗的类型（添加用户，编辑用户）
-  },
-  // Quick Start 已经介绍过 subscriptions 的概念，这里不在多说
-  subscriptions: {
-    setup({ dispatch, history }) {
-      history.listen(location => {
-        if (location.pathname === '/user') {
-          dispatch({
-            type: 'query',
-            payload: {}
-          });
-        }
-      });
-    },
   },
   effects: {
     *query({ payload }, { select, call, put }) {
