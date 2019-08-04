@@ -2,7 +2,7 @@
 // 处理异步请求
 import { routerRedux } from 'dva/router';
 import { apiUserDetail } from '../services/login.js';
-import { getToken } from '../utils/auth' // 验权
+import { getToken, removeToken } from '../utils/auth' // 验权
 
 export default {
   namespace: 'user',
@@ -36,6 +36,8 @@ export default {
           payload: { ...data.data}
         });
       } else {
+        console.log("已过期")
+        removeToken()
         yield put( routerRedux.push('/login') ); // 路由跳转
       }
     },

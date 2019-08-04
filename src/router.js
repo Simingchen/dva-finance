@@ -4,7 +4,9 @@ import { routerRedux, Route, Switch } from 'dva/router';
 import dynamic from 'dva/dynamic';
 import NProgress from 'nprogress' // Progress 进度条
 import 'nprogress/nprogress.css'// Progress 进度条样式
-import { getToken } from './utils/auth' // 验权
+import { getToken, removeToken } from './utils/auth' // 验权
+import Layout from './views/layout/Layout.jsx'
+import page from './views/IndexPage.jsx'
 const { ConnectedRouter } = routerRedux;
 
 function RouterConfig({ history, app }) {
@@ -19,6 +21,7 @@ function RouterConfig({ history, app }) {
         NProgress.done()
       }
     } else {
+      removeToken()
       app._store.dispatch(routerRedux.push('/login'))
     }
     NProgress.done()
@@ -33,13 +36,14 @@ function RouterConfig({ history, app }) {
   let routes = [
     {
       path: '/',
+      'Layout': Layout,
       models: () => [import('./models/user.js')],
       component: () => import('./views/IndexPage.jsx'),
       'children': [
         {
-          'path': 'customerDetails',
-          'component': 'customerManagement/customerDetails',
-          'name': 'CustomerDetails',
+          'path': '/',
+          'component': page,
+          'name': 'index',
           'hidden': true,
           'meta': { 'title': '客户详情', 'noCache': false }
         }
@@ -49,15 +53,6 @@ function RouterConfig({ history, app }) {
       path: '/login',
       models: () => [import('./models/login.js')],
       component: () => import('./views/login.jsx'),
-      'children': [
-        {
-          'path': 'customerDetails',
-          'component': 'customerManagement/customerDetails',
-          'name': 'CustomerDetails',
-          'hidden': true,
-          'meta': { 'title': '客户详情', 'noCache': false }
-        }
-      ]
     },
     // { // 订单管理
     //   'path': '/orderManagement',
@@ -86,10 +81,27 @@ function RouterConfig({ history, app }) {
       <Switch>
         {/* <Route path="/" exact render={() => (<Redirect to="/dashboard" />)} /> */}
         {
-          routes.map(({ path, name, ...dynamics }, index) => {
-            return (
-              <Route path={path} key={index} exact component={dynamic({ app, ...dynamics })} />
-            )
+          routes.map(({ path, name, children, ...dynamics }, index) => {
+            console.log(children)
+            if (children) {
+              return (
+                // <Layout>
+                <Route path={path} key={index} exact component={dynamic({ app, ...dynamics })} />
+                  // {
+                  //   children.map((route, key) => {
+                  //     console.log(key)
+                  //     return (
+                  //       <Route key={key} exact path={route.path} component={route.component} />
+                  //     )
+                  //   })
+                  // }
+                /* </Layout> */
+              )
+            } else {
+              return (
+                <Route path={path} key={index} exact component={dynamic({ app, ...dynamics })} />
+              )
+            }
           })
         }
       </Switch>
