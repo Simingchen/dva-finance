@@ -10,8 +10,8 @@ const app = dva();
 // app.use({});
 
 // 3. Model
-app.model(require('./models/user.js').default);
-app.model(require('./models/login.js').default);
+// app.model(require('./models/user.js').default);
+// app.model(require('./models/login.js').default);
 
 // 4. Router
 app.router(router);

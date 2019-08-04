@@ -7,3 +7,5 @@
 在.webpackrc文件添加proxy代理地址
 4. 路由跳转
 this.props.history.push("/")
+5，动态添加路由
+router.js 独立路由列表，权限路由表由后台配置
