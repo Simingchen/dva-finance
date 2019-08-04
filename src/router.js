@@ -5,6 +5,20 @@ import dynamic from 'dva/dynamic';
 const { ConnectedRouter } = routerRedux;
 
 function RouterConfig({ history, app }) {
+  // 路由监听
+  history.listen(location => {
+    const uid = sessionStorage.getItem('uid') || localStorage.getItem("uid")
+    console.log(location.pathname)
+    if (location.pathname === '/' || location.pathname === '/login') {
+      if (uid) {
+        app._store.dispatch(routerRedux.replace('/backstage'))
+      }
+    } else {
+      if (!uid) {
+        app._store.dispatch(routerRedux.push('/'))
+      }
+    }
+  })
 //   const error = dynamic({
 //     app,
 //     component: () => import('./views/error.jsx'),
