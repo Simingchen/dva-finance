@@ -8,33 +8,24 @@
 // effects：用于处理异步操作和业务逻辑，不直接修改 state。可以指定 type，写法参考上文 takeLatest
 // reducers：同 redux 中的 redur 一样，用于处理同步操作，唯一可以修改 state 的地方。
 // 处理异步请求
-import request from '../utils/request';
-async function query(params) {
-  // return request(`/api/users?${qs.stringify(params)}`);
-  return request('http://47.107.46.219:7300/mock/5d1d5d6177bdc300869e2b82/longda_copy/admin/customerManager/pagedResult.do', {
-    method: 'POST',
-    data: {
 
-    }
-  });
-}
+import {routerRedux} from 'dva/router'
+import { apiUserDetail } from '../services/login.js'
+import { getToken, removeToken } from '../utils/auth.js'
 
 export default {
-  namespace: 'users',
+  namespace: 'user',
   state: {
-    list: [],
-    total: null,
-    loading: true, // 控制加载状态
-    current: null, // 当前分页信息
-    currentItem: {}, // 当前操作的用户对象
-    modalVisible: false, // 弹出窗的显示状态
-    modalType: 'create', // 弹出窗的类型（添加用户，编辑用户）
+    entityInfo: {},
+    umGroup: {},
+    roles: [],
+    umUser: {},
   },
   // Quick Start 已经介绍过 subscriptions 的概念，这里不在多说
   subscriptions: {
     setup({ dispatch, history }) {
       history.listen(location => {
-        if (location.pathname === '/users') {
+        if (location.pathname === '/') {
           dispatch({
             type: 'query',
             payload: {}
@@ -46,16 +37,16 @@ export default {
   effects: {
     *query({ payload }, { select, call, put }) {
       yield put({ type: 'showLoading' });
-      const { data } = yield call(query);
-      if (data) {
+      const token = getToken()
+      const { data } = yield call(apiUserDetail, token);
+      if (data.code === '0') {
         yield put({
           type: 'querySuccess',
-          payload: {
-            list: data.data.dataList,
-            total: data.data.summary.totalRecord,
-            current: 1
-          }
+          payload: {...data.data}
         });
+      } else {
+        removeToken()
+        yield put(routerRedux.push('/login'))
       }
     },
     *create(){},

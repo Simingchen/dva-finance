@@ -2,9 +2,10 @@ import React from "react";
 import { connect } from "dva";
 import styles from "../css/IndexPage.css";
 
-function IndexPage() {
+function IndexPage({ user }) {
     return (
         <div className={styles.normal}>
+            <div>{ user.umUser.user_name }</div>
             <h1 className={styles.title}>Yay! Welcome to dva!</h1>
             <div className={styles.welcome} />
             <ul className={styles.list}>
@@ -18,4 +19,10 @@ function IndexPage() {
 IndexPage.propTypes = {
 };
 
-export default connect()(IndexPage);
+function mapStateToProps({ user }) {
+  console.log(user)
+  return {
+    user
+  };
+}
+export default connect(mapStateToProps)(IndexPage);

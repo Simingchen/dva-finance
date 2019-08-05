@@ -30,8 +30,8 @@ function RouterConfig({ history, app }) {
 //     app,
 //     component: () => import('./views/error.jsx'),
 //   });
-   
-    
+
+
   // >>>>>>>>>>>>>>>路由数组 START <<<<<<<<<<<<<<<
   let routes = [
     {
@@ -71,7 +71,7 @@ function RouterConfig({ history, app }) {
     //     }
     //   ]
     // }
-    
+
   ];
   // >>>>>>>>>>>>>>>路由数组 END <<<<<<<<<<<<<<<
 

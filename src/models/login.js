@@ -1,39 +1,37 @@
 // 简单理解 call 是调用执行一个函数而 put 则是相当于 dispatch 执行一个 action，而 select 则可以用来访问其它 model
-// 列表查询
-// export function apiCommodityList (par) {
-//   return req({
-//     url: 'admin/appManager/appPagedResult.do',
-//     method: 'POST',
-//     data: Object.assign({}, par)
-//   })
-// }
-// 处理异步请求
-import { apiLogin} from '../services/login.js';
+
+import md5 from 'js-md5'
+import { routerRedux } from 'dva/router';
+import { apiLogin, genUUID } from '../services/login.js'
+import { setToken } from '../utils/auth'
 
 export default {
   namespace: 'login',
   state: {
-    list: [],
-    total: null,
-    loading: true, // 控制加载状态
-    current: null, // 当前分页信息
-    currentItem: {}, // 当前操作的用户对象
-    modalVisible: false, // 弹出窗的显示状态
-    modalType: 'create', // 弹出窗的类型（添加用户，编辑用户）
+    token: null,  // 登录token
   },
   effects: {
     *query({ payload }, { select, call, put }) {
       yield put({ type: 'showLoading' });
-      const { data } = yield call(apiLogin);
-      if (data) {
+      const { data } = yield call(genUUID);
+
+      const uuids = data.data.uuid
+      const password = md5(payload.password)
+      const par = {
+        uuid: uuids,
+        encryptPwd: md5(password + uuids),
+        loginName: payload.username,
+      }
+      const user  = yield call(apiLogin, par.uuid, par.encryptPwd, par.loginName);
+
+      if (user.data.code === '0') {
+        setToken(user.data.data.token)
         yield put({
           type: 'querySuccess',
-          payload: {
-            list: data.data.dataList,
-            total: data.data.summary.totalRecord,
-            current: 1
-          }
+          payload: { ...user.data.data }
         });
+
+        yield put(routerRedux.replace('/login'))
       }
     },
     *create(){},
@@ -58,6 +56,7 @@ export default {
     hideModal(){},
     // 使用服务器数据返回
     querySuccess(state, action){
+      console.log(action)
       return {...state, ...action.payload, loading: false};
     },
     createSuccess(){},

@@ -1,9 +1,7 @@
 import React  from 'react';
 import { Form, Icon, Input, Button } from 'antd';
-// import { routerRedux } from 'dva/router';
-import { setToken } from '../utils/auth'
-import md5 from 'js-md5'
-import { apiLogin, genUUID } from '../services/login.js'
+import { connect } from "dva";
+
 
 function hasErrors(fieldsError) {
   return Object.keys(fieldsError).some(field => fieldsError[field]);
@@ -11,29 +9,16 @@ function hasErrors(fieldsError) {
 
 class HorizontalLoginForm extends React.Component {
   componentDidMount() {
-    // To disabled submit button at the beginning.
-    this.props.form.validateFields();
+    // this.props.form.validateFields();
   }
 
   handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        genUUID().then(res => {
-          console.log(res)
-          
-          const uuids = res.data.data.uuid
-          const password = md5(values.password)
-          const par = {
-            uuid: uuids,
-            encryptPwd: md5(password + uuids),
-            loginName: values.username,
-          }
-          apiLogin(par.uuid, par.encryptPwd, par.loginName).then(res => {
-            console.log(res)
-            setToken(res.data.data.token)
-            this.props.history.push("/")
-          })
+        this.props.dispatch({
+          type: 'login/query',
+          payload: { ...values }
         })
       }
     });
@@ -78,6 +63,14 @@ class HorizontalLoginForm extends React.Component {
   }
 }
 
-const WrappedHorizontalLoginForm = Form.create({ name: 'horizontal_login' })(HorizontalLoginForm);
+const LoginPage = Form.create({ name: 'horizontal_login' })(HorizontalLoginForm);
 
-export default WrappedHorizontalLoginForm
+LoginPage.propTypes = {};
+
+function mapStateToProps({user }) {
+    return {
+      user,
+    };
+}
+
+export default connect(mapStateToProps)(LoginPage);
