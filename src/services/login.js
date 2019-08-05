@@ -1,9 +1,9 @@
 // import req from '@/utils/req'
 import req from "../utils/request";
 
-export function getInfo (token) {
+export function apiUserInfo (token) {
   return req({
-    url: '/user/info',
+    url: 'api/user/info',
     method: 'get',
     params: { token }
   })
@@ -19,23 +19,31 @@ export function logout () {
 // 获取uuid
 export function genUUID () {
   return req({
-    url: 'sso/authentication/genUUID.do',
+    url: 'api/sso/authentication/genUUID.do',
     method: 'GET'
   })
 }
 // 用户登录
-export function apiLogin (par) {
+export function apiLogin1 (par) {
   return req({
-    url: 'sso/authentication/login.do',
+    url: 'api/sso/authentication/login.do',
     method: 'POST',
-    params: par
+    body: JSON.stringify(par)
+  })
+}
+
+// 用户登录
+export function apiLogin (uuid, encryptPwd, loginName) {
+  return req({
+    url: 'api/sso/authentication/login.do?uuid=' + uuid + '&encryptPwd=' + encryptPwd + '&loginName=' + loginName,
+    method: 'POST'
   })
 }
 
 // 获取用户信息
-export function userDetail (token) {
+export function apiUserDetail (token) {
   return req({
-    url: 'sso/authentication/userDetail.do?token=' + token,
+    url: 'api/sso/authentication/userDetail.do?token=' + token,
     method: 'POST'
   })
 }

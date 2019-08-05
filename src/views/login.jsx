@@ -1,5 +1,7 @@
 import React  from 'react';
 import { Form, Icon, Input, Button } from 'antd';
+// import { routerRedux } from 'dva/router';
+import { setToken } from '../utils/auth'
 import md5 from 'js-md5'
 import { apiLogin, genUUID } from '../services/login.js'
 
@@ -19,21 +21,19 @@ class HorizontalLoginForm extends React.Component {
       if (!err) {
         genUUID().then(res => {
           console.log(res)
-          // const uuids = res.data.data.uuid
-          // const password = md5(values.password)
-          // const userInfo = {
-          //   uuids: uuids,
-          //   username: values.username,
-          //   password: md5(password + uuids)
-          // }
-          // const par = {
-          //   uuid: uuids,
-          //   encryptPwd: md5(password + uuids),
-          //   loginName: values.username,
-          // }
-          // apiLogin(par).then(res => {
-          //   console.log(res)
-          // })
+          
+          const uuids = res.data.data.uuid
+          const password = md5(values.password)
+          const par = {
+            uuid: uuids,
+            encryptPwd: md5(password + uuids),
+            loginName: values.username,
+          }
+          apiLogin(par.uuid, par.encryptPwd, par.loginName).then(res => {
+            console.log(res)
+            setToken(res.data.data.token)
+            this.props.history.push("/")
+          })
         })
       }
     });

@@ -3,19 +3,13 @@ import { getToken } from './auth'
 
 
 function parseJSON(response) {
-  console.log(response)
   return response.json();
 }
 
 function checkStatus(response) {
-  console.log(response.status)
   if (response.status >= 200 && response.status < 300) {
-
+    return response;
   }
-  return response;
-  // const error = new Error(response.statusText);
-  // error.response = response;
-  // throw error;
 }
 
 /**
@@ -26,22 +20,16 @@ function checkStatus(response) {
  * @return {object}           An object containing either "data" or "err"
  */
 
-const baseUrl = 'http://47.107.46.219:8083/'
-
 function request(options = {}) {
   const config = {
-    headers: {
-      'Accept': 'application/json, text/plain, */*',
-      'Content-Type': 'application/json'
-    },
-    mode: 'no-cors',
+    headers: {},
   }
   config.headers['cache-control'] = 'no-cache'
   config.headers['Pragma'] = 'no-cache'
   config.headers['token'] = getToken() // 让每个请求携带自定义token
 
   options = { ...options, ...config}
-  return fetch(baseUrl + options.url, options)
+  return fetch(options.url, options)
     .then(checkStatus)
     .then(parseJSON)
     .then(data => ({ data }))
