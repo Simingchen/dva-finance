@@ -1,5 +1,6 @@
 // import req from '@/utils/req'
 import req from "../utils/request";
+import qs from 'qs'
 
 export function apiUserInfo (token) {
   return req({
@@ -49,9 +50,17 @@ export function apiUserDetail (token) {
 }
 
 // 获取用户菜单权限列表
-export function userPermission (id, etype, utype) {
+export function userPermission1 (id, etype, utype) {
   return req({
-    url: 'admin/userManager/queryUserMenu.do?user_id=' + id + '&entity_type=' + etype + '&user_type=' + utype,
-    method: 'GET'
+    url: 'api/admin/userManager/queryUserMenu.do?user_id=' + id + '&entity_type=' + etype + '&user_type=' + utype,
+    method: 'GET',
+  })
+}
+
+// 获取用户菜单权限列表
+export function userPermission (par) {
+  return req({
+    url: 'api/admin/userManager/queryUserMenu.do?' + qs.stringify(par),
+    method: 'GET',
   })
 }
