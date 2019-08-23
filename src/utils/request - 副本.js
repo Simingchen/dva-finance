@@ -32,10 +32,8 @@ function request(options = {}) {
   config.headers['token'] = getToken() // 让每个请求携带自定义token
 
   options = { ...options, ...config}
-  const url = options.url
-  delete options.url
   console.log(options)
-  return fetch(url, options)
+  return fetch(options.url, options)
     .then(checkStatus)
     .then(parseJSON)
     .then(data => ({ data }))
