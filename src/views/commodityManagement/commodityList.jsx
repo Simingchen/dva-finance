@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "dva";
-import styles from "../css/IndexPage.css";
+import styles from "@/css/IndexPage.css";
 
 function IndexPage({ user }) {
     return (
